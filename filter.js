@@ -1,4 +1,4 @@
-M.wrap('github/jillix/bind-filter/dev/filter.js', function (require, module, exports) {
+M.wrap('github/IonicaBizau/bind-filter/dev/filter.js', function (require, module, exports) {
 var Bind = require('github/jillix/bind');
 var Events = require('github/jillix/events');
 
@@ -55,7 +55,7 @@ function uid (len, uid) {
 
 function setFilters (filters, reset, dontFetchData) {
     var self = this;
-    
+
     if (!filters || typeof filters !== "object") {
         return;
     }
@@ -67,19 +67,19 @@ function setFilters (filters, reset, dontFetchData) {
     if (reset) {
         self.filters = {};
     }
-    
+
     // create and buffer filters
     for (var i = 0, l = filters.length; i < l; ++i) {
-    
+
         // validate field
         if (validate.validate.call(self, filters[i])) {
-            
+
             // convert value from value field
             filters[i] = validate.convert.call(self, filters[i]);
-            
+
             var hash = filters[i].hash || uid(4);
             self.filters[hash] = self.filters[hash] || {};
-            
+
             // merge filter
             for (var key in filters[i]) {
                 if (!filters[i].hasOwnProperty(key)) return;
@@ -96,10 +96,10 @@ function setFilters (filters, reset, dontFetchData) {
             }
         }
     }
-    
+
     // emit filters cached event
     self.emit('filtersCached', self.filters, reset);
-    
+
     // find data in db
     if (!dontFetchData) {
         find.call(self);
@@ -113,23 +113,23 @@ function getTemplates (templates, reset, callback) {
     self.emit('getTemplates', templates, function (err, templates) {
 
         self.emit('templateResult', err, templates);
-        
+
         if (err) {
             return callback(err);
         }
-        
+
         // merge fetched templates into result templates
         for (var template in templates) {
             if (!templates.hasOwnProperty(template)) return;
 
            self.templates[template] = templates[template];
         }
-        
+
         // reset cache
         if (reset) {
             self.templates = templates;
         }
-        
+
         callback(null);
     });
 }
@@ -143,7 +143,7 @@ function setTemplates (templates, callback) {
                 // TODO handle error
                 return console.error(err);
             }
-            
+
             // select a template
             if (!self.template) {
                 for (template in self.templates) {
@@ -154,11 +154,11 @@ function setTemplates (templates, callback) {
                     break;
                 }
             }
-            
+
             if (callback) {
                 callback();
             }
-            
+
             // emit the templates
             self.emit('templates', self.templates);
         });
@@ -183,22 +183,22 @@ function setTemplate (template, dontFetchData, force) {
 
     // get template from server or cache
     getTemplates.call(self, [template], false, function (err) {
-        
+
         if (err || !self.templates[template]) {
             // TODO handle error
             return console.error(err || 'template ' + template + ' not found.');
         }
-        
+
         // set current template (this is only the id)
         self.template = template;
-        
+
         // set sort options
         if (self.templates[template].sort) {
             self.emit("setOptions", { sort: self.templates[template].sort });
         }
 
         setFilters.call(self, (self.config.setFilters || []).concat(self.templates[template].filters || []), true, dontFetchData);
-        
+
         // emit the template
         self.emit('template', self.templates[template]);
     });
@@ -230,7 +230,7 @@ function setOptions (options, reset, callFind) {
         for (var option in options) {
             if (!options.hasOwnProperty(option)) return;
             var value = options[option];
-            
+
             // option is an array
             //var optionValue = self.options[option];
 
@@ -259,7 +259,7 @@ function setOptions (options, reset, callFind) {
 
     // emit options cahed event
     self.emit('optionsCached', self.options, reset);
-    
+
     // find data in db
     if (callFind) {
         find.call(self);
@@ -301,7 +301,7 @@ function getItem (dataItem, callback) {
                 return callback(null, data[i]);
             }
         }
-        
+
         // TODO How must this look?
         callback(null, {_id: dataItem._id, bindFilterMessage: 'hide'});
     });
@@ -309,7 +309,7 @@ function getItem (dataItem, callback) {
 
 function initInterface () {
     var self = this;
-    
+
     // listen to interface events
     self.on('setFilters', setFilters);
     self.on('setTemplate', setTemplate);
@@ -328,18 +328,18 @@ function init (config) {
     self.config = config;
     self.filters = {};
     self.templates = templateCache;
-    
+
     // TODO merge options
     self.options = config.options || defaultOptions;
     self.config.operators = operatorConfig;
-    
+
     if (!config.waitFor) {
         return console.error('At least a CRUD mofule must be a dependency of the bind-filter module.');
     }
-        
+
     // setup interface
     initInterface.call(self);
-    
+
     // listen to external events
     Events.call(self, config);
 
@@ -373,7 +373,7 @@ function init (config) {
     if (self.config.ui) {
         ui.call(self);
     }
-    
+
     // init templates
     if (self.config.setTemplates) {
         self.emit('setTemplates', self.config.setTemplates, function () {
@@ -386,7 +386,7 @@ function init (config) {
     } else if (self.config.template) {
         self.emit('setTemplate', self.config.template);
     }
-    
+
     self.emit('ready');
 }
 

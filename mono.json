@@ -1,6 +1,6 @@
 {
     "source": "github",
-    "owner": "jillix",
+    "owner": "IonicaBizau",
     "name": "bind-filter",
     "dependencies": [
         "/filter.js",
@@ -11,7 +11,7 @@
         "/message.js",
         "/loader.js",
         "/validate.js",
-        "github/jillix/bind/v0.1.5",
-        "github/jillix/events/v0.1.4"
+        "github/jillix/bind/v0.1.6",
+        "github/jillix/events/v0.1.6"
     ]
 }

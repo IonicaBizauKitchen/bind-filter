@@ -1,12 +1,12 @@
-M.wrap('github/jillix/bind-filter/dev/validate.js', function (require, module, exports) {
+M.wrap('github/IonicaBizau/bind-filter/dev/validate.js', function (require, module, exports) {
 function convert (values) {
     var self = this;
     var schema = self.templates[self.template].schema;
-    
+
     // TODO handle regExp options
     values.label = schema[values.field].label;
     var operator = self.config.operators[values.operator];
-    
+
     if (typeof values.value === 'string') {
 
         // handle array value
@@ -36,7 +36,7 @@ function convert (values) {
 function validate (values) {
     var self = this;
     var schema = self.templates[self.template].schema;
-    
+
     // check if field and operator exists
     if (!schema[values.field] || !self.config.operators[values.operator]) {
         return false;
@@ -47,24 +47,24 @@ function validate (values) {
 
 function getFieldLabel (field, locale) {
     var self = this;
-    
+
     if (!self.templates[self.template]) {
         return;
     };
-    
+
     var schema = self.templates[self.template].schema;
-    
+
     if (!schema[field]) {
         return;
     }
-    
+
     locale = locale || M.getLocale();
-    
+
     var label = (schema[field] || {}).label;
     if (typeof  label === "object") {
         label = label[M.getLocale()];
     }
-    
+
     return label || field;
 }
 

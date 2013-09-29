@@ -1,4 +1,4 @@
-M.wrap('github/jillix/bind-filter/dev/ui.js', function (require, module, exports) {
+M.wrap('github/IonicaBizau/bind-filter/dev/ui.js', function (require, module, exports) {
 var find = require('./find');
 var list = require('./list');
 var inputs = require('./inputs');
