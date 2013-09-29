@@ -4,6 +4,7 @@ var list = require('./list');
 var inputs = require('./inputs');
 var message = require('./message');
 var loader = require('./loader');
+var getFieldLabel = require('./validate').getFieldLabel;
 
 // TODO use bind for dom interaction/manipulation
 function elm(d,a){try{var b=document.createElement(d);if("object"===typeof a)for(var c in a)if (!a.hasOwnProperty(c)) return;b.setAttribute(c,a[c]);return b}catch(e){return null}}
@@ -16,9 +17,13 @@ function get(s,c){
 
 function save () {
     var self = this;
+
+    var field = inputs.getDropdownValue($(self.domRefs.inputs.field).closest(".dropdown"));
+    var operator = inputs.getDropdownValue($(self.domRefs.inputs.operator).closest(".dropdown"));
+
     var filter = {
-        field: self.domRefs.inputs.field.value,
-        operator: self.domRefs.inputs.operator.value || '=',
+        field: field,
+        operator: operator || '=',
         value: self.domRefs.inputs.value.value,
         hash: self.current
     };
@@ -259,6 +264,29 @@ function ui () {
     // init loader
     loader.call(self);
 
+    // handlers
+    $(self.dom).on("click", self.config.ui.inputs.field + " li", function () {
+        var $dropdown = $(this).closest(".dropdown");
+        var value = $(this).attr("value");
+        var text = getFieldLabel.call(self, value, M.getLocale());
+
+        inputs.setDropdownValue($dropdown, value, text);
+
+        // emit changed
+        $(this).closest(".dropdown-menu").trigger("change");
+    });
+
+    // handlers
+    $(self.dom).on("click", self.config.ui.inputs.operator + " li", function () {
+        var $dropdown = $(this).closest(".dropdown");
+        var value = $(this).attr("value");
+        var text = self.config.i18n ? (self.config.i18n[value] || value) : value;
+        inputs.setDropdownValue($dropdown, value, text);
+
+        // emit changed
+        $(this).closest(".dropdown-menu").trigger("change");
+    });
+
     // listen to ui events
     self.on('saveFilter', save);
     self.on('createFilter', edit);
@@ -296,24 +324,25 @@ function ui () {
 
     // template change
     if (self.domRefs.templateSelector) {
-        self.domRefs.templateSelector.addEventListener('change', function () {
+        $(self.domRefs.templateSelector).on('change', function () {
             self.emit('setTemplate', self.domRefs.templateSelector.value);
         });
     }
 
     // field change
     if (self.domRefs.inputs.field) {
-        self.domRefs.inputs.field.addEventListener('change', function () {
-            self.emit('fieldChange', self.domRefs.inputs.field.value);
+        $(self.domRefs.inputs.field).on('change', function () {
+            self.emit('fieldChange', inputs.getDropdownValue($(self.domRefs.inputs.field).closest(".dropdown")));
         });
     }
 
     // operator change
     if (self.domRefs.inputs.operator) {
-        self.domRefs.inputs.operator.addEventListener('change', function () {
-            self.emit('fieldChange', self.domRefs.inputs.field.value, self.domRefs.inputs.operator.value);
+        $(self.domRefs.inputs.operator).on('change', function () {
+            self.emit('fieldChange', self.domRefs.inputs.field.value, inputs.getDropdownValue($(self.domRefs.inputs.operator).closest(".dropdown")));
         });
     }
+
 }
 
 module.exports = ui;

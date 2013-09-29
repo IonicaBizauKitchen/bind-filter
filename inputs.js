@@ -8,22 +8,45 @@ function fields () {
     var self = this;
     var fields = self.templates[self.template].schema;
 
-    var df = document.createDocumentFragment();
+    // TODO PureJS?
+    var df = $("<div>");
     var locale = M.getLocale();
     for (var field in fields) {
         if (!fields.hasOwnProperty(field)) return;
 
         if (field.indexOf('_') !== 0 && !fields[field].noSearch) {
-            var option = elm('option', {value: field});
-            option.innerHTML = getFieldLabel.call(self, field, locale);
-            df.appendChild(option);
+            // TODO Pure JS?
+            var $option = $("<li>");
+            $option.append($("<a>").attr("role", "menuitem"));
+            $option.attr("value", field);
+            $option.find("a").text(getFieldLabel.call(self, field, locale));
+
+            df.append($option.get(0));
         }
     }
 
+
     if (self.domRefs.inputs.field) {
         self.domRefs.inputs.field.innerHTML = '';
-        self.domRefs.inputs.field.appendChild(df);
+        //self.domRefs.inputs.field.appendChild(df);
+        $(self.domRefs.inputs.field).append(df.find("li"));
     }
+
+
+    // TODO Pure JS?
+    var $dropdown = $(self.config.ui.inputs.field + " li", self.dom).closest(".dropdown");
+    var value = $dropdown.find("li").first().attr("value");
+    var text = getFieldLabel.call(self, value, locale);
+    setDropdownValue($dropdown, value, text);
+}
+
+function setDropdownValue (dropdown, value, text) {
+    dropdown.find(".title").text(text);
+    dropdown.attr("data-selected-value", value);
+}
+
+function getDropdownValue (dropdown) {
+    return dropdown.attr("data-selected-value");
 }
 
 function checkOperator (fieldTemplate, operator) {
@@ -46,8 +69,12 @@ function value (field, operator, value, editMode) {
 
     // refresh operators when changing the field
     if (!operator || editMode) {
-        var df = document.createDocumentFragment();
+
+        var df = $("<div>");
+        // var df = document.createDocumentFragment();
         var order = self.config.ui.operatorOrder;
+
+        var operatorSet = false;
 
         for (var i in order) {
             if (!order.hasOwnProperty(i)) {
@@ -56,21 +83,38 @@ function value (field, operator, value, editMode) {
 
             var op = order[i];
             if (checkOperator.call(self, fieldTemplate, op)) {
-                var option = elm('option', {value: op});
-                option.innerHTML = self.config.i18n ? (self.config.i18n[op] || op) : op;
+
+                // TODO Pure JS?
+                var $option = $("<li>");
+                $option.append($("<a>").attr("role", "menuitem"));
+                $option.attr("value", op);
+                $option.find("a").text(self.config.i18n ? (self.config.i18n[op] || op) : op);
 
                 // select operator
                 if (operator === op) {
-                    option.setAttribute('selected');
+                    $option.click();
+                    operatorSet = true;
+                    //$option.setAttribute('selected');
                 }
 
-                df.appendChild(option);
+                df.append($option);
+                // df.appendChild($option.get(0));
             }
         }
 
         if (self.domRefs.inputs.operator) {
             self.domRefs.inputs.operator.innerHTML = '';
-            self.domRefs.inputs.operator.appendChild(df);
+            //self.domRefs.inputs.operator.appendChild(df);
+            $(self.domRefs.inputs.operator).html(df.find("li"));
+        }
+
+
+        if (!operatorSet) {
+            // TODO Pure JS?
+            var $dropdown = $(self.config.ui.inputs.operator, self.dom).closest(".dropdown");
+            var value = $dropdown.find("li").first().attr("value");
+            var text = self.config.i18n ? (self.config.i18n[value] || value) : value;
+            setDropdownValue($dropdown, value, text);
         }
     }
 
@@ -135,6 +179,8 @@ function value (field, operator, value, editMode) {
 
 exports.value = value;
 exports.fields = fields;
+exports.setDropdownValue = setDropdownValue;
+exports.getDropdownValue = getDropdownValue;
 
 
 return module; });
