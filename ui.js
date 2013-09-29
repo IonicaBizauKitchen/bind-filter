@@ -29,8 +29,8 @@ function save () {
     };
 
     self.emit('showLoader');
-
     self.emit('setFilters', [filter]);
+    self.domRefs.controls.create.style.display = 'block';
 
     var createKey = 'create';
     if (self.domRefs.controls[createKey]) {
@@ -44,6 +44,7 @@ function edit (hash) {
 
     self.current = hash || null;
 
+    self.domRefs.controls.create.style.display = 'none';
     // handle remove button
     if (hash && self.filters[hash]) {
         self.domRefs.controls.remove.style.display = 'inline';
@@ -79,6 +80,7 @@ function cancel () {
     var self = this;
     self.current = null;
     self.domRefs.filter.style.display = 'none';
+    self.domRefs.controls.create.style.display = 'block';
 }
 
 function enable (hash) {
