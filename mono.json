@@ -11,6 +11,7 @@
         "/message.js",
         "/loader.js",
         "/validate.js",
+        "http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js",
         "github/jillix/bind/v0.1.6",
         "github/jillix/events/v0.1.6"
     ]
