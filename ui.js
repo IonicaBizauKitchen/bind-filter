@@ -90,7 +90,7 @@ function enable (hash) {
     self.emit('resetSkip');
 
     // TODO remove class with bind
-    self.filters[hash].item.setAttribute('class', '');
+    $(self.filters[hash].item).removeClass("disabled");
     self.filters[hash].disabled = false;
 
     find.call(self);
@@ -103,7 +103,7 @@ function disable (hash) {
     self.emit('resetSkip');
 
     // TODO add class with bind
-    self.filters[hash].item.setAttribute('class', 'disabled');
+    $(self.filters[hash].item).addClass("disabled");
     self.filters[hash].disabled = true;
 
     find.call(self);
