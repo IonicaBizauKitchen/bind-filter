@@ -27,7 +27,7 @@ function createFilterItem (hash) {
 
     // enable/disable filter
     if (self.filters[hash].disabled) {
-        item.setAttribute('class', 'disabled');
+        $(item).addClass('disabled');
         if (checkbox) {
             checkbox.removeAttribute('checked');
         }
