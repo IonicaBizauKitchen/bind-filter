@@ -32,8 +32,11 @@ function get(s,c){
 function save () {
     var self = this;
 
-    var field = inputs.getDropdownValue($(self.domRefs.inputs.field).closest(".dropdown"));
-    var operator = inputs.getDropdownValue($(self.domRefs.inputs.operator).closest(".dropdown"));
+    // TODO Pure JS?
+    var $fieldDropdown = $(self.domRefs.inputs.field).closest(".dropdown");
+    var $operatorDropdown = $(self.domRefs.inputs.opearator).closest(".dropdown");
+    var field = inputs.getDropdownValue($fieldDropdown);
+    var operator = inputs.getDropdownValue($operatorDropdown);
 
     var filter = {
         field: field,
@@ -50,6 +53,9 @@ function save () {
     if (self.domRefs.controls[createKey]) {
         self.domRefs.controls[createKey].focus();
     }
+
+    inputs.resetDropdown.call(self, $fieldDropdown);
+    inputs.resetDropdown.call(self, $operatorDropdown);
 }
 
 function edit (hash) {
@@ -96,6 +102,8 @@ function cancel () {
     self.current = null;
     self.domRefs.filter.style.display = 'none';
     self.domRefs.controls.create.style.display = 'block';
+    inputs.resetDropdown.call(self, $fieldDropdown);
+    inputs.resetDropdown.call(self, $operatorDropdown);
 }
 
 function enable (hash) {

@@ -54,12 +54,26 @@ function fields () {
 }
 
 function setDropdownValue (dropdown, value, text) {
-    dropdown.find(".title").text(text);
-    dropdown.attr("data-selected-value", value);
+    var self = this;
+
+    $(dropdown).find(".title").text(text);
+    $(dropdown).attr("data-selected-value", value);
+
+    return value;
 }
 
 function getDropdownValue (dropdown) {
-    return dropdown.attr("data-selected-value");
+    var self = this;
+    return $(dropdown).attr("data-selected-value");
+}
+
+function resetDropdown (dropdown) {
+    var self = this;
+
+    var $first = $(dropdown).find("li").first();
+    setDropdownValue.call(self, dropdown, $first.attr("value"), $first.text());
+
+    return getDropdownValue.call(self, dropdown);
 }
 
 function checkOperator (fieldTemplate, operator) {
@@ -194,6 +208,6 @@ exports.value = value;
 exports.fields = fields;
 exports.setDropdownValue = setDropdownValue;
 exports.getDropdownValue = getDropdownValue;
-
+exports.resetDropdown    = resetDropdown;
 
 return module; });
