@@ -112,9 +112,9 @@ function value (field, operator, value, editMode) {
         if (!operatorSet) {
             // TODO Pure JS?
             var $dropdown = $(self.config.ui.inputs.operator, self.dom).closest(".dropdown");
-            var value = $dropdown.find("li").first().attr("value");
-            var text = self.config.i18n ? (self.config.i18n[value] || value) : value;
-            setDropdownValue($dropdown, value, text);
+            var operator = $dropdown.find("li").first().attr("value");
+            var text = self.config.i18n ? (self.config.i18n[operator] || operator) : operator;
+            setDropdownValue($dropdown, operator, text);
         }
     }
 
