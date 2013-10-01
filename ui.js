@@ -72,6 +72,7 @@ function remove (hash) {
 
     self.domRefs.filter.style.display = 'none';
     list.remove.call(self, hash || self.current);
+    self.domRefs.controls.create.style.display = 'block';
 
     find.call(self);
 }
