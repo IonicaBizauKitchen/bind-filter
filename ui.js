@@ -7,7 +7,21 @@ var loader = require('./loader');
 var getFieldLabel = require('./validate').getFieldLabel;
 
 // TODO use bind for dom interaction/manipulation
-function elm(d,a){try{var b=document.createElement(d);if("object"===typeof a)for(var c in a)if (!a.hasOwnProperty(c)) return;b.setAttribute(c,a[c]);return b}catch(e){return null}}
+function elm(d, a) {
+    try {
+        var b = document.createElement(d);
+        if ("object" === typeof a) {
+            for (var c in a) {
+                if (!a.hasOwnProperty(c)) return;
+                b.setAttribute(c, a[c]);
+            }
+        }
+        return b
+    } catch (e) {
+        return null
+    }
+}
+
 function get(s,c){
     try{return (c||document).querySelector(s);}
     catch (err) {
