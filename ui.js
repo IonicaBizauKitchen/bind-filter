@@ -102,6 +102,9 @@ function cancel () {
     self.current = null;
     self.domRefs.filter.style.display = 'none';
     self.domRefs.controls.create.style.display = 'block';
+
+    var $fieldDropdown = $(self.domRefs.inputs.field).closest(".dropdown");
+    var $operatorDropdown = $(self.domRefs.inputs.operator).closest(".dropdown");
     inputs.resetDropdown.call(self, $fieldDropdown);
     inputs.resetDropdown.call(self, $operatorDropdown);
 }
