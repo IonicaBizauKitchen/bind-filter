@@ -34,7 +34,7 @@ function save () {
 
     // TODO Pure JS?
     var $fieldDropdown = $(self.domRefs.inputs.field).closest(".dropdown");
-    var $operatorDropdown = $(self.domRefs.inputs.opearator).closest(".dropdown");
+    var $operatorDropdown = $(self.domRefs.inputs.operator).closest(".dropdown");
     var field = inputs.getDropdownValue($fieldDropdown);
     var operator = inputs.getDropdownValue($operatorDropdown);
 
