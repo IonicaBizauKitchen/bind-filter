@@ -110,8 +110,8 @@ function getTemplates (templates, reset, callback) {
     var self = this;
 
     // get templates to fetch from server
-    self.emit('getTemplates', templates, function (err, templates) {
 
+    self.emit('find', [templates], function (err, templates) {
         self.emit('templateResult', err, templates);
 
         if (err) {
@@ -119,15 +119,18 @@ function getTemplates (templates, reset, callback) {
         }
 
         // merge fetched templates into result templates
+
         for (var template in templates) {
             if (!templates.hasOwnProperty(template)) return;
-
-           self.templates[template] = templates[template];
+            self.templates[templates[template]._id] = templates[template];
         }
 
         // reset cache
         if (reset) {
-            self.templates = templates;
+            for (var template in templates) {
+                if (!templates.hasOwnProperty(template)) return;
+                self.templates[templates[template]._id] = templates[template];
+            }
         }
 
         callback(null);
@@ -182,7 +185,7 @@ function setTemplate (template, dontFetchData, force) {
     }
 
     // get template from server or cache
-    getTemplates.call(self, [template], false, function (err) {
+    getTemplates.call(self, template, false, function (err) {
 
         if (err || !self.templates[template]) {
             // TODO handle error
